@@ -1,0 +1,63 @@
+/*
+ * File: safety_gate_logic.c
+ * Purpose:
+ *  Deterministic safety gate enforcing electrical and operational limits.
+ *  This layer has final authority over all actuation decisions.
+ *
+ *  NOTE:
+ *  This is conceptual pseudocode. It represents logic flow, not deployable firmware.
+ */
+
+#include <stdbool.h>
+
+/* -------------------- Safety Thresholds -------------------- */
+#define MAX_VOLTAGE      230.0   // Volts
+#define MIN_VOLTAGE      210.0   // Volts
+#define MAX_FREQUENCY     50.5   // Hz
+#define MIN_FREQUENCY     49.5   // Hz
+#define MIN_BATTERY_SOC   20.0   // Percent
+
+/* -------------------- System State -------------------- */
+typedef struct {
+    float voltage;
+    float frequency;
+    float battery_soc;
+    float total_load;
+    float total_generation;
+} system_state_t;
+
+/* -------------------- Actuation Stubs -------------------- */
+void shed_non_critical_load(void);
+void enter_emergency_mode(void);
+void block_battery_usage(void);
+void apply_ai_recommendation(void);
+
+/* -------------------- Safety Gate Logic -------------------- */
+void safety_gate(system_state_t state, bool ai_requests_battery)
+{
+    /* 1. Frequency Safety Check */
+    if (state.frequency < MIN_FREQUENCY || state.frequency > MAX_FREQUENCY) {
+        enter_emergency_mode();
+        return;   // Override all other logic
+    }
+
+    /* 2. Voltage Safety Check */
+    if (state.voltage < MIN_VOLTAGE || state.voltage > MAX_VOLTAGE) {
+        shed_non_critical_load();
+        // Continue monitoring after corrective action
+    }
+
+    /* 3. Battery Protection Check */
+    if (state.battery_soc < MIN_BATTERY_SOC) {
+        block_battery_usage();
+
+        // Reject AI request if it involves battery usage
+        if (ai_requests_battery) {
+            shed_non_critical_load();
+            return;
+        }
+    }
+
+    /* 4. Safe to Apply AI Advisory */
+    apply_ai_recommendation();
+}
