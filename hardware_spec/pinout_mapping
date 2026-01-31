@@ -1,0 +1,41 @@
+
+---
+
+
+
+Since the MCU is not fixed, **pin numbers must be abstract**.
+
+### Corrected `hardware_spec/pinout_mapping.txt`
+
+```text
+Logical Pin Mapping (Abstract)
+
+NOTE:
+This mapping defines functional connections, not physical pin numbers.
+
+----------------------------------------
+ANALOG INPUTS
+----------------------------------------
+Voltage Sensor        -> ADC_CHANNEL_V
+Current Sensor        -> ADC_CHANNEL_I
+Battery SOC Input     -> ADC_CHANNEL_SOC
+
+----------------------------------------
+DIGITAL INPUTS
+----------------------------------------
+Frequency Reference   -> DIGITAL_IN_FREQ
+Emergency Stop        -> DIGITAL_IN_ESTOP
+
+----------------------------------------
+DIGITAL OUTPUTS
+----------------------------------------
+Relay: Load Group A   -> DIGITAL_OUT_LA
+Relay: Load Group B   -> DIGITAL_OUT_LB
+Relay: Battery Source -> DIGITAL_OUT_BATT
+Relay: Grid Source    -> DIGITAL_OUT_GRID
+
+----------------------------------------
+COMMUNICATION
+----------------------------------------
+Debug Interface       -> SERIAL_DEBUG
+System Bus            -> CONTROL_BUS
